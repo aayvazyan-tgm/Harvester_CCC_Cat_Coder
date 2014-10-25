@@ -33,7 +33,7 @@ public class Main {
             }
 
         }
-        result+=
+        result=result.substring(0,result.length()-1);
         return result;
     }
     public static ArrayList<Integer> readIntInput(String filePath){
