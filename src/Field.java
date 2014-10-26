@@ -1,10 +1,9 @@
-import java.awt.*;
-
 /**
- * Created by Ari on 26.10.2014.
+ * Created by Ari Ayvazyan on 26.10.2014.
  */
 public class Field {
     int[][] spielfeld;
+    int farmerStartPositionNumber=-1;
     Point farmerPosition;
     public Field(int x, int y, int farmX, int farmY){
         this.spielfeld=new int[x][y];
@@ -16,6 +15,7 @@ public class Field {
             }
         }
         this.farmerPosition=new Point(farmX-1,farmY-1);
+        this.farmerStartPositionNumber=getNumber();
     }
     public boolean isUpFree(){
         if(farmerPosition.x-1>=0){
@@ -86,5 +86,30 @@ public class Field {
     }
     public int getWidth() {
         return this.spielfeld[0].length;
+    }
+
+    public void turnField() {
+        spielfeld=rotateCW(spielfeld);
+        this.farmerPosition=this.findNumber(farmerStartPositionNumber);
+    }
+    public Point findNumber(int number){
+        for (int i = 0; i < spielfeld.length; i++) {
+            for (int j = 0; j < spielfeld[0].length; j++) {
+                if(spielfeld[i][j]==number)
+                    return new Point(i,j);
+            }
+        }
+        return null;
+    }
+    static int[][] rotateCW(int[][] mat) {
+        final int M = mat.length;
+        final int N = mat[0].length;
+        int[][] ret = new int[N][M];
+        for (int r = 0; r < M; r++) {
+            for (int c = 0; c < N; c++) {
+                ret[c][M-1-r] = mat[r][c];
+            }
+        }
+        return ret;
     }
 }
