@@ -101,6 +101,20 @@ public class Field {
         }
         return null;
     }
+    public String getRowString(int rowIndex, boolean invert){
+        String rowString="";
+        if(invert){
+            for (int i = spielfeld[rowIndex].length-1; i >= 0; i--) {
+                rowString += this.spielfeld[rowIndex][i] + " ";
+            }
+        }else {
+            for (int i = 0; i < spielfeld[rowIndex].length; i++) {
+                rowString += this.spielfeld[rowIndex][i] + " ";
+            }
+        }
+        rowString = rowString.substring(0, rowString.length() - 1);//remove last blank
+        return rowString;
+    }
     static int[][] rotateCW(int[][] mat) {
         final int M = mat.length;
         final int N = mat[0].length;
