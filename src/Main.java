@@ -4,41 +4,80 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
+    public enum StartPoint {
+        TopLeft, TopRight, BottomLeft, BottomRight
+    }
 
     public static void main(String[] args) {
-        System.out.println(work(3,4));
-        System.out.println(work(2,5));
-        System.out.println(work(5,2));
-        System.out.println(work(23,12));
+        System.out.println(work(3, 4, 1, 1));
+        System.out.println(work(2, 5, 2, 1));
+        System.out.println(work(5, 2, 5, 2));
+        System.out.println(work(23, 12, 1, 12));
     }
-    public static String work(int x, int y){
-        String result="";
-        boolean back=false;
-        int cur=0;
-        for (int i = 0; i < x; i++) {
-            if(back==false) {
-                for (int j = 0; j < y; j++) {
-                    cur++;
-                    result+=cur+" ";
-                }
-                back=true;
-            }else {
-                cur+=y+1;
-                for (int j = y; j > 0; j--) {
-                    cur--;
-                    result+=cur+" ";
-                }
-                back=false;
-                cur+=y-1;
-            }
 
-        }
-        result=result.substring(0,result.length()-1);
+    public static String work(int x, int y, int f1, int f2) {
+        String result = "";
+        Field field = new Field(x, y, f1, f2);
+        StartPoint startPoint = getStartPoint(x, y, f1, f2);
+        result = workHard(field, startPoint);
         return result;
     }
-    public static ArrayList<Integer> readIntInput(String filePath){
+
+    private static String workHard(Field field, StartPoint startPoint) {
+        String result = "";
+        boolean toTheLeft = false;
+        //if(startPoint==StartPoint.BottomLeft||startPoint==StartPoint.TopLeft)toTheLeft=false;
+        if (startPoint == StartPoint.BottomRight || startPoint == StartPoint.TopRight) toTheLeft = true;
+        boolean up = false;
+        if (startPoint == StartPoint.BottomRight || startPoint == StartPoint.BottomLeft) up = true;
+
+        boolean finished = false;
+        result += field.getNumber() + " ";
+        int doneRows = 0;
+        int lastNumber=-1;
+        while (doneRows < field.getHeight()) {
+            if (toTheLeft) {
+                if (!field.left()) {
+                    toTheLeft = false;
+                    doneRows++;
+                    if (up) {
+                        if (!field.up());
+                    } else {
+                        if (!field.down());
+                    }
+                }
+            } else {
+                if (!field.right()) {
+                    toTheLeft = true;
+                    doneRows++;
+                    if (up) {
+                        if (!field.up());
+                    } else {
+                        if (!field.down());
+                    }
+                }
+            }
+            if(lastNumber!=field.getNumber()) {//Avoid the last duplicate number
+                lastNumber = field.getNumber();
+                result += field.getNumber() + " ";
+            }
+        }
+        result = result.substring(0, result.length()-1);//remove last blank
+        return result;
+    }
+
+
+    public static StartPoint getStartPoint(int x, int y, int f1, int f2) {
+        if (x == f1 && 1 == f2) return StartPoint.BottomLeft;
+        if (x == f1 && y == f2) return StartPoint.BottomRight;
+        if (1 == f1 && 1 == f2) return StartPoint.TopLeft;
+        if (1 == f1 && y == f2) return StartPoint.TopRight;
+        return null;
+    }
+
+    public static ArrayList<Integer> readIntInput(String filePath) {
         File f = new File(filePath);
-        ArrayList<Integer> result=new ArrayList<Integer>();
+        ArrayList<Integer> result = new ArrayList<Integer>();
         if (f.exists()) {
             Scanner scanner = null;
             try {
