@@ -66,7 +66,7 @@ public class Main {
                     } else {
                         if (workflow == Workflow.Circular) {
                             int goToRow = field.farmerPosition.x+(field.getHeight() - doneRows);
-                            field.farmerPosition = new Point(goToRow, field.getWidth() - 1);
+                            field.farmerPosition = new Point(goToRow, 0);
                             up=true;
                         }else {
                             if (!field.down()) ;
@@ -80,7 +80,7 @@ public class Main {
                     if (up) {
                         if (workflow == Workflow.Circular) {
                             int goToRow = field.farmerPosition.x+(doneRows - field.getHeight());
-                            field.farmerPosition = new Point(goToRow, 0);
+                            field.farmerPosition = new Point(goToRow, field.getWidth() - 1);
                             up=false;
                         }else {
                             if (!field.up()) ;
